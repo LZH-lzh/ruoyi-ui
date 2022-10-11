@@ -24,13 +24,22 @@
           value-format="yyyy-MM-dd"
           placeholder="请选择扫描时间">
         </el-date-picker>-->
-        <el-date-picker clearable
+        <!--<el-date-picker clearable
           v-model="queryParams.scanDatetime"
           type="datetime"
           placeholder="选择日期时间"
           align="right"
           :picker-options="pickerOptions">
-        </el-date-picker>
+        </el-date-picker>-->
+        <el-date-picker clearable
+          v-model="daterangeScanDatetime"
+          style="width: 240px"
+          value-format="yyyy-MM-dd HH:mm:ss"
+          type="datetimerange"
+          range-separator="-"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+        ></el-date-picker>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -60,12 +69,12 @@
           v-hasPermi="['vuln:history:export']"
         >导出</el-button>
       </el-col>
-      <router-link :to="'/scanvuln'" tag="span">
+      <!--<router-link :to="'/scanvuln'" tag="span">
         <el-button
           type="warning"
           size="mini"
         >扫描漏洞</el-button>
-      </router-link>
+      </router-link>-->
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
     <el-table v-loading="loading" :data="historyList" @selection-change="handleSelectionChange">
@@ -169,6 +178,8 @@ export default {
         highriskRate: null,
         results:null,
       },
+      // 扫描结果时间范围
+      daterangeScanDatetime: [],
       // 表单参数
       form: {},
       //结果
@@ -218,8 +229,15 @@ export default {
     },
     /** 查询漏洞扫描历史记录列表 */
     getList() {
-      this.currentPage++;
+      //this.currentPage++;
       this.loading = true;
+      this.queryParams.params = {};
+      if (null != this.daterangeScanDatetime && '' != this.daterangeScanDatetime) {
+        console.log(this.daterangeScanDatetime[0]);
+        console.log(this.daterangeScanDatetime[1]);
+        this.queryParams.params["beginScanDatetime"] = this.daterangeScanDatetime[0];
+        this.queryParams.params["endScanDatetime"] = this.daterangeScanDatetime[1];
+      }
       listHistory(this.queryParams).then(response => {
         this.historyList = response.rows;
         this.total = response.total;

@@ -43,7 +43,7 @@
       </el-upload>
     </el-form>
     <br>
-    <div v-for="(cmd,index) in commandlist" :key="scanComponent">
+    <div v-for="(cmd,index) in commandlist" :key="index">
       <el-card class="box-card">
         <div slot="header" class="clearfix">
           <span>扫描结果</span>
