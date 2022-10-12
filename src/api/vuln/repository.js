@@ -42,7 +42,7 @@ export function delRepository(scriptId) {
     method: 'delete'
   })
 }
-// 删除漏洞库
+// 更新漏洞库
 export function updateScript() {
   return request({
     url: '/vuln/repository/update',

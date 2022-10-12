@@ -48,9 +48,9 @@
       <el-button
         type="success"
         plain
-        icon="el-icon-edit"
+        :icon="this.updateIcon"
         size="mini"
-        @click="handleUpdateScript"
+        @click="handleUpdateScript1"
         v-hasPermi="['vuln:repository:edit']"
       >更新</el-button>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -149,6 +149,7 @@ export default {
       form: {},
       //描述
       des: "",
+      updateIcon:"el-icon-check",
       // 表单校验
       rules: {
         scriptName: [
@@ -171,6 +172,7 @@ export default {
         this.repositoryList = response.rows;
         this.total = response.total;
         this.loading = false;
+        this.updateIcon = "el-icon-check";
       });
     },
     // 取消按钮
@@ -224,8 +226,19 @@ export default {
 
     /* 更新脚本 */
     handleUpdateScript(){
-      updateScript();
+      return new Promise((revolve)=>{
+        revolve(
+          updateScript()
+        );
+      })
     },
+    handleUpdateScript1(){
+      this.updateIcon = "el-icon-loading";
+      this.handleUpdateScript().then(()=>{
+        this.getList();
+      })
+    },
+
     /* 展示描述 */
     showDescription(row){
       console.log(row.scriptDescription);
